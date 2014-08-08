@@ -27,8 +27,7 @@ namespace Calc
         private Keys? _lastKeyInput = null;
         IOperation op = null;
         List<string> parameters = new List<string>();
-        private double _total = 0;
-        
+
         protected override void OnCreate(Bundle bundle)
 		{
 			base.OnCreate(bundle);
@@ -153,8 +152,8 @@ namespace Calc
                     txt.Text += resultField.Text + "+";
                     resultField.Text = "";
                         
-                    if (op == null || op.GetType() != typeof(Addition))
-                        op = new Addition();
+                    // if (op == null || op.GetType() != typeof(Addition))
+                    //  op = new Addition();
                         
                     if (parameters.Count == 2)
                     {
@@ -163,7 +162,9 @@ namespace Calc
                         resultField.Text = r.ToString();
                         parameters.Clear();
                         parameters.Add(r.ToString());
-                    }                        
+                    } 
+                    if (op == null || op.GetType() != typeof(Addition))
+                        op = new Addition();
                     _lastKeyInput = Keys.Operator;
                     return;
                 }
@@ -175,6 +176,7 @@ namespace Calc
                         op = new Addition();
                         txt.Text = ReplaceLastChar(txt.Text, '+');              
                     }
+                    _lastKeyInput = Keys.Operator;
                 }           
             };
             
@@ -186,8 +188,8 @@ namespace Calc
                     txt.Text += resultField.Text + "-";
                     resultField.Text = "";
 
-                    if (op == null || op.GetType() != typeof(Subtraction))
-                        op = new Subtraction();
+                    // if (op == null || op.GetType() != typeof(Subtraction))
+                    //    op = new Subtraction();
 
                     if (parameters.Count == 2)
                     {
@@ -196,9 +198,11 @@ namespace Calc
                         resultField.Text = r.ToString();
                         parameters.Clear();
                         parameters.Add(r.ToString());
-                        _total = op.Calculate(_total, r);
-                        resultField.Text = _total.ToString();
                     }
+                    if (op == null || op.GetType() != typeof(Subtraction))
+                        op = new Subtraction();
+                    _lastKeyInput = Keys.Operator;
+                    return;
                 }
 
                 if (_lastKeyInput == Keys.Operator)
@@ -206,19 +210,92 @@ namespace Calc
                     if (op == null || op.GetType() != typeof(Subtraction))
                     {
                         op = new Subtraction();
-                        txt.Text = ReplaceLastChar(txt.Text, '-');              
+                        txt.Text = ReplaceLastChar(txt.Text, '-');
                     }
+                    _lastKeyInput = Keys.Operator;
                 }
             };
             
+            buttonMultiplication.Click += (object sender, EventArgs e) =>
+            {
+                    if (_lastKeyInput == Keys.Digit)
+                    {
+                        parameters.Add(resultField.Text);
+                        txt.Text += resultField.Text + "*";
+                        resultField.Text = "";
+
+                        // if (op == null || op.GetType() != typeof(Subtraction))
+                        //    op = new Subtraction();
+
+                        if (parameters.Count == 2)
+                        {
+                            double[] p = this.Parse(parameters);
+                            double r = op.Calculate(p);
+                            resultField.Text = r.ToString();
+                            parameters.Clear();
+                            parameters.Add(r.ToString());
+                        }
+                        if (op == null || op.GetType() != typeof(Multiplication))
+                            op = new Multiplication();
+                        _lastKeyInput = Keys.Operator;
+                        return;
+                    }
+
+                    if (_lastKeyInput == Keys.Operator)
+                    {
+                        if (op == null || op.GetType() != typeof(Multiplication))
+                        {
+                            op = new Multiplication();
+                            txt.Text = ReplaceLastChar(txt.Text, '*');
+                        }
+                        _lastKeyInput = Keys.Operator;
+                    }
+            };
             
+            buttonDivision.Click += (object sender, EventArgs e) =>
+            {
+                if (_lastKeyInput == Keys.Digit)
+                {
+                    parameters.Add(resultField.Text);
+                    txt.Text += resultField.Text + "/";
+                    resultField.Text = "";
+
+                    // if (op == null || op.GetType() != typeof(Subtraction))
+                    //    op = new Subtraction();
+
+                    if (parameters.Count == 2)
+                    {
+                        double[] p = this.Parse(parameters);
+                        double r = op.Calculate(p);
+                        resultField.Text = r.ToString();
+                        parameters.Clear();
+                        parameters.Add(r.ToString());
+                    }
+                    if (op == null || op.GetType() != typeof(Division))
+                        op = new Division();
+                    _lastKeyInput = Keys.Operator;
+                    return;
+                }
+
+                if (_lastKeyInput == Keys.Operator)
+                {
+                    if (op == null || op.GetType() != typeof(Division))
+                    {
+                        op = new Division();
+                        txt.Text = ReplaceLastChar(txt.Text, '/');
+                    }
+                    _lastKeyInput = Keys.Operator;
+                }
+            };
+            
+            // =
             buttonEqual.Click += (object sender, EventArgs e) =>
             {
                 if (_lastKeyInput == Keys.Digit)
                 {
                     parameters.Add(resultField.Text);
                     txt.Text = string.Empty;
-                    double r = Eval(op, this.Parse(parameters));
+                    double r = op.Calculate(this.Parse(parameters));
                     resultField.Text = r.ToString();
                 }
                 if (_lastKeyInput == Keys.Operator)
@@ -239,10 +316,10 @@ namespace Calc
             };
 		}
 
-		public double Eval(IOperation op, params double[] parameters)
-		{
-			return op.Calculate(parameters);
-		}
+//		public double Eval(IOperation op, params double[] parameters)
+//		{
+//			return op.Calculate(parameters);
+//		}
 
 		public double[] Parse(List<string> parameters)
         {

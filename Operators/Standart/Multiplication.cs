@@ -11,7 +11,7 @@ namespace Calc
             if (parameters.Length != 2)
                 throw new ArgumentException("It's binary operation");
 
-            return parameters[0] / parameters[1];
+            return parameters[0] * parameters[1];
         }
     }
 }

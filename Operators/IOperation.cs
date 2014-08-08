@@ -9,7 +9,5 @@ namespace Calc
         /// </summary>
         /// <param name="parameters">Parameters.</param>
         double Calculate(params double[] parameters);
-
-
     }
 }
