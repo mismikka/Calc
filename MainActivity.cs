@@ -146,15 +146,12 @@ namespace Calc
             
             buttonAddition.Click += (object sender, EventArgs e) =>
             {
-                if (_lastKeyInput == Keys.Digit)
+                if (_lastKeyInput == Keys.Digit || _lastKeyInput == Keys.Sign)
                 {
                     parameters.Add(resultField.Text);
                     txt.Text += resultField.Text + "+";
                     resultField.Text = "";
-                        
-                    // if (op == null || op.GetType() != typeof(Addition))
-                    //  op = new Addition();
-                        
+
                     if (parameters.Count == 2)
                     {
                         double[] p = this.Parse(parameters);
@@ -163,6 +160,7 @@ namespace Calc
                         parameters.Clear();
                         parameters.Add(r.ToString());
                     } 
+                        
                     if (op == null || op.GetType() != typeof(Addition))
                         op = new Addition();
                     _lastKeyInput = Keys.Operator;
@@ -182,14 +180,11 @@ namespace Calc
             
             buttonSubstraction.Click += (object sender, EventArgs e) =>
             {
-                if (_lastKeyInput == Keys.Digit)
+                    if (_lastKeyInput == Keys.Digit ||_lastKeyInput == Keys.Sign)
                 {
                     parameters.Add(resultField.Text);
                     txt.Text += resultField.Text + "-";
                     resultField.Text = "";
-
-                    // if (op == null || op.GetType() != typeof(Subtraction))
-                    //    op = new Subtraction();
 
                     if (parameters.Count == 2)
                     {
@@ -199,6 +194,7 @@ namespace Calc
                         parameters.Clear();
                         parameters.Add(r.ToString());
                     }
+                        
                     if (op == null || op.GetType() != typeof(Subtraction))
                         op = new Subtraction();
                     _lastKeyInput = Keys.Operator;
@@ -218,14 +214,11 @@ namespace Calc
             
             buttonMultiplication.Click += (object sender, EventArgs e) =>
             {
-                    if (_lastKeyInput == Keys.Digit)
+                    if (_lastKeyInput == Keys.Digit ||_lastKeyInput == Keys.Sign)
                     {
                         parameters.Add(resultField.Text);
                         txt.Text += resultField.Text + "*";
                         resultField.Text = "";
-
-                        // if (op == null || op.GetType() != typeof(Subtraction))
-                        //    op = new Subtraction();
 
                         if (parameters.Count == 2)
                         {
@@ -235,8 +228,10 @@ namespace Calc
                             parameters.Clear();
                             parameters.Add(r.ToString());
                         }
+                        
                         if (op == null || op.GetType() != typeof(Multiplication))
                             op = new Multiplication();
+                        
                         _lastKeyInput = Keys.Operator;
                         return;
                     }
@@ -254,15 +249,12 @@ namespace Calc
             
             buttonDivision.Click += (object sender, EventArgs e) =>
             {
-                if (_lastKeyInput == Keys.Digit)
+                    if (_lastKeyInput == Keys.Digit || _lastKeyInput == Keys.Sign)
                 {
                     parameters.Add(resultField.Text);
                     txt.Text += resultField.Text + "/";
                     resultField.Text = "";
-
-                    // if (op == null || op.GetType() != typeof(Subtraction))
-                    //    op = new Subtraction();
-
+                        
                     if (parameters.Count == 2)
                     {
                         double[] p = this.Parse(parameters);
@@ -273,6 +265,7 @@ namespace Calc
                     }
                     if (op == null || op.GetType() != typeof(Division))
                         op = new Division();
+                        
                     _lastKeyInput = Keys.Operator;
                     return;
                 }
@@ -291,18 +284,46 @@ namespace Calc
             // =
             buttonEqual.Click += (object sender, EventArgs e) =>
             {
-                if (_lastKeyInput == Keys.Digit)
+                    if (_lastKeyInput == Keys.Digit || _lastKeyInput == Keys.Sign)
                 {
                     parameters.Add(resultField.Text);
                     txt.Text = string.Empty;
-                    double r = op.Calculate(this.Parse(parameters));
-                    resultField.Text = r.ToString();
+                    if (parameters.Count == 2)
+                    {
+                        double r = op.Calculate(this.Parse(parameters));
+                        resultField.Text = r.ToString();
+                    }
+                        _lastKeyInput = Keys.Equal;
+                    return;
                 }
+
                 if (_lastKeyInput == Keys.Operator)
                 {
                     txt.Text = "";
                     resultField.Text = op.Calculate(double.Parse(parameters[0]), double.Parse(resultField.Text)).ToString();
                     parameters.Clear();
+                        _lastKeyInput = Keys.Equal;
+                    return;
+                }
+
+                if (_lastKeyInput == Keys.Equal)
+                {
+                    resultField.Text = op.Calculate(double.Parse(resultField.Text), double.Parse(resultField.Text)).ToString();
+                        _lastKeyInput = Keys.Equal;
+
+                }
+            };
+            
+            buttonNegation.Click += (object sender, EventArgs e) =>
+            {
+                if (_lastKeyInput == Keys.Digit || _lastKeyInput == Keys.Sign || _lastKeyInput == Keys.Equal)
+                {
+                    //if (op == null || op.GetType() != typeof(Negation))
+                     //   op = new Negation();
+
+                    resultField.Text = new Negation().Calculate(double.Parse(resultField.Text)).ToString();
+                    //resultField.Text = op.Calculate(double.Parse(resultField.Text)).ToString();
+                    _lastKeyInput = Keys.Sign;
                 }
             };
             
