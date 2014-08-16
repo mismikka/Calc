@@ -12,9 +12,10 @@ using System.Linq;
 
 namespace Calc
 {
-    [Activity(Label = "Calc", MainLauncher = true, Icon = "@drawable/icon")]
+
+    [Activity(Label = "Ultra Super Mega Jesus Calculator", MainLauncher = true, Icon = "@drawable/CalcIcon")]
     internal sealed class MainActivity : Activity
-    {
+    { 
         private enum Keys
         { 
             Digit, 
@@ -31,10 +32,28 @@ namespace Calc
         protected override void OnCreate(Bundle bundle)
 		{
 			base.OnCreate(bundle);
-
+            ActionBar.NavigationMode = ActionBarNavigationMode.Tabs;
 			// Set our view from the "main" layout resource
 			SetContentView(Resource.Layout.Main);
-            
+
+            ActionBar.Tab tab = ActionBar.NewTab();
+            tab.SetText(Resources.GetString(Resource.String.calcTab));
+            //tab.SetIcon(Resource.Drawable.CalcTabIcon);
+            tab.TabSelected += (sender, args) =>
+            {
+                // Do something when tab is selected
+            };
+            ActionBar.AddTab(tab);
+
+            tab = ActionBar.NewTab();
+            tab.SetText(Resources.GetString(Resource.String.convertTab));
+            //tab.SetIcon(Resource.Drawable.ConvertTabIcon);
+            tab.TabSelected += (sender, args) =>
+            {
+                // Do something when tab is selected
+            };
+            ActionBar.AddTab(tab);
+
 			Button button0 = FindViewById<Button>(Resource.Id.Button0);
 			Button button1 = FindViewById<Button>(Resource.Id.Button1);
 			Button button2 = FindViewById<Button>(Resource.Id.Button2);
@@ -59,6 +78,7 @@ namespace Calc
 
             TextView resultField = FindViewById<TextView>(Resource.Id.textView1);
 			TextView txt = FindViewById<TextView>(Resource.Id.TextView);
+
 
 			#region button[0-9] handlers
             
@@ -177,7 +197,7 @@ namespace Calc
                     _lastKeyInput = Keys.Operator;
                 }           
             };
-            
+
             buttonSubstraction.Click += (object sender, EventArgs e) =>
             {
                     if (_lastKeyInput == Keys.Digit ||_lastKeyInput == Keys.Sign)
@@ -335,12 +355,28 @@ namespace Calc
                 txt.Text = string.Empty;
                 parameters.Clear();
             };
-		}
 
-//		public double Eval(IOperation op, params double[] parameters)
-//		{
-//			return op.Calculate(parameters);
-//		}
+            ViewSwitcher viewSwitcher = FindViewById<ViewSwitcher>(Resource.Id.viewSwitcher);
+            LinearLayout calcView1 = FindViewById<LinearLayout>(Resource.Id.calcView1);
+            LinearLayout calcView2 = FindViewById<LinearLayout>(Resource.Id.calcView2);
+            Button functions = FindViewById<Button>(Resource.Id.functions);
+            Button standart = FindViewById<Button>(Resource.Id.standart);
+
+           // viewSwitcher.SetInAnimation(this, Android.Resource.Animation.FadeIn);
+            //viewSwitcher.SetOutAnimation(this, Android.Resource.Animation.FadeIn);
+            functions.Click += (object sender, EventArgs e) =>
+            {
+                if (viewSwitcher.CurrentView != calcView2)
+                    viewSwitcher.ShowNext();
+            };
+
+            standart.Click += (object sender, EventArgs e) =>
+            {
+                if (viewSwitcher.CurrentView == calcView2)
+                    viewSwitcher.ShowPrevious();
+
+            };
+		}
 
 		public double[] Parse(List<string> parameters)
         {

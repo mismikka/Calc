@@ -2,4 +2,6 @@
 <resources>
 	<string name="hello">Hello World, Click Me!</string>
 	<string name="app_name">Calc</string>
+    <string name="calcTab">Calculator</string>
+    <string name="convertTab">Converter</string>
 </resources>
