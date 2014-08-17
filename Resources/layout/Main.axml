@@ -20,8 +20,9 @@
         android:id="@+id/viewSwitcher"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true">
+        android:gravity="center">
+    <!--        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true">-->
         <LinearLayout
             android:layout_height="match_parent"
             android:layout_width="match_parent"
@@ -135,7 +136,7 @@
                     android:layout_weight="1"
                     android:text="4"
                     android:id="@+id/Button4"
-                    android:textAlignment="gravity" />
+                    android:gravity="center" />
                 <Button
                     android:layout_height="match_parent"
                     android:layout_width="0dp"

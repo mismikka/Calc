@@ -2,6 +2,9 @@
 
 namespace Calc
 {
+    /// <summary>
+    /// Деление 1 на x
+    /// </summary>
     internal sealed class Fraction : IOperation
     {
         public double Calculate(params double[] parameters)

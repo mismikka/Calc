@@ -2,6 +2,9 @@
 
 namespace Calc
 {
+    /// <summary>
+    /// Квадратный корень
+    /// </summary>
     public class Sqrt : IOperation
     {
         public double Calculate(params double[] parameters)

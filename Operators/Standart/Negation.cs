@@ -2,6 +2,9 @@
 
 namespace Calc
 {
+    /// <summary>
+    /// Умножение на -1
+    /// </summary>
     internal sealed class Negation : IOperation
     {
         public double Calculate(params double[] parameters)

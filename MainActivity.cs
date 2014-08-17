@@ -22,7 +22,8 @@ namespace Calc
             Operator, 
             Equal, 
             DecimalPoint,
-            Sign
+            Sign,
+            Unary
         }
 
         private Keys? _lastKeyInput = null;
@@ -38,7 +39,6 @@ namespace Calc
 
             ActionBar.Tab tab = ActionBar.NewTab();
             tab.SetText(Resources.GetString(Resource.String.calcTab));
-            //tab.SetIcon(Resource.Drawable.CalcTabIcon);
             tab.TabSelected += (sender, args) =>
             {
                 // Do something when tab is selected
@@ -47,7 +47,6 @@ namespace Calc
 
             tab = ActionBar.NewTab();
             tab.SetText(Resources.GetString(Resource.String.convertTab));
-            //tab.SetIcon(Resource.Drawable.ConvertTabIcon);
             tab.TabSelected += (sender, args) =>
             {
                 // Do something when tab is selected
@@ -73,12 +72,30 @@ namespace Calc
 			Button buttonSqrt = FindViewById<Button>(Resource.Id.ButtonSqrt);
 			Button buttonSubstraction = FindViewById<Button>(Resource.Id.ButtonSub);
 			Button buttonEqual = FindViewById<Button>(Resource.Id.ButtonEqual);
+            Button buttonBackspace = FindViewById<Button>(Resource.Id.ButtonBackspace);
+            Button buttonComma = FindViewById<Button>(Resource.Id.ButtonComma);
 
 			Button buttonC = FindViewById<Button>(Resource.Id.ButtonC);
 
             TextView resultField = FindViewById<TextView>(Resource.Id.textView1);
 			TextView txt = FindViewById<TextView>(Resource.Id.TextView);
 
+            Button sin = FindViewById<Button>(Resource.Id.sin);
+            Button asin = FindViewById<Button>(Resource.Id.asin);
+            Button cos = FindViewById<Button>(Resource.Id.cos);
+            Button acos = FindViewById<Button>(Resource.Id.acos);
+            Button tan = FindViewById<Button>(Resource.Id.tan);
+            Button atan = FindViewById<Button>(Resource.Id.atan);
+            Button ctg = FindViewById<Button>(Resource.Id.ctg);
+            Button actg = FindViewById<Button>(Resource.Id.actg);
+            Button ln = FindViewById<Button>(Resource.Id.ln); // e
+            Button log = FindViewById<Button>(Resource.Id.log); // 10
+            Button pi = FindViewById<Button>(Resource.Id.pi);
+            Button exp = FindViewById<Button>(Resource.Id.exp);
+            Button pov = FindViewById<Button>(Resource.Id.pov);
+            Button rand = FindViewById<Button>(Resource.Id.rand);
+            Button mod = FindViewById<Button>(Resource.Id.mod);
+            Button div = FindViewById<Button>(Resource.Id.div);
 
 			#region button[0-9] handlers
             
@@ -163,7 +180,7 @@ namespace Calc
                 };
 
 			#endregion
-            
+
             buttonAddition.Click += (object sender, EventArgs e) =>
             {
                 if (_lastKeyInput == Keys.Digit || _lastKeyInput == Keys.Sign)
@@ -197,7 +214,7 @@ namespace Calc
                     _lastKeyInput = Keys.Operator;
                 }           
             };
-
+                    
             buttonSubstraction.Click += (object sender, EventArgs e) =>
             {
                     if (_lastKeyInput == Keys.Digit ||_lastKeyInput == Keys.Sign)
@@ -231,7 +248,7 @@ namespace Calc
                     _lastKeyInput = Keys.Operator;
                 }
             };
-            
+                    
             buttonMultiplication.Click += (object sender, EventArgs e) =>
             {
                     if (_lastKeyInput == Keys.Digit ||_lastKeyInput == Keys.Sign)
@@ -266,7 +283,7 @@ namespace Calc
                         _lastKeyInput = Keys.Operator;
                     }
             };
-            
+                    
             buttonDivision.Click += (object sender, EventArgs e) =>
             {
                     if (_lastKeyInput == Keys.Digit || _lastKeyInput == Keys.Sign)
@@ -300,8 +317,7 @@ namespace Calc
                     _lastKeyInput = Keys.Operator;
                 }
             };
-            
-            // =
+
             buttonEqual.Click += (object sender, EventArgs e) =>
             {
                     if (_lastKeyInput == Keys.Digit || _lastKeyInput == Keys.Sign)
@@ -326,14 +342,14 @@ namespace Calc
                     return;
                 }
 
-                if (_lastKeyInput == Keys.Equal)
+                    if (_lastKeyInput == Keys.Equal && op != null)
                 {
                     resultField.Text = op.Calculate(double.Parse(resultField.Text), double.Parse(resultField.Text)).ToString();
                         _lastKeyInput = Keys.Equal;
 
                 }
             };
-            
+
             buttonNegation.Click += (object sender, EventArgs e) =>
             {
                 if (_lastKeyInput == Keys.Digit || _lastKeyInput == Keys.Sign || _lastKeyInput == Keys.Equal)
@@ -346,8 +362,48 @@ namespace Calc
                     _lastKeyInput = Keys.Sign;
                 }
             };
-            
-            // Clear
+
+            buttonSqrt.Click += (object sender, EventArgs e) => 
+                {
+                    if (_lastKeyInput == Keys.Digit || _lastKeyInput == Keys.Sign || _lastKeyInput == Keys.Equal)
+                    {
+                        resultField.Text = new Sqrt().Calculate(double.Parse(resultField.Text)).ToString();
+                        _lastKeyInput = Keys.Operator;
+                    }
+                };
+
+            buttonFraction.Click += (object sender, EventArgs e) =>
+            {
+                    if (_lastKeyInput == Keys.Digit || _lastKeyInput == Keys.Sign || _lastKeyInput == Keys.Equal)
+                    {
+                        resultField.Text = new Fraction().Calculate(double.Parse(resultField.Text)).ToString();
+                    }
+            };
+
+            buttonBackspace.Click += (object sender, EventArgs e) =>
+                {
+                    if (_lastKeyInput == Keys.Digit || _lastKeyInput == Keys.Equal)
+                    {
+                        if (!(string.IsNullOrEmpty(resultField.Text)))
+                            resultField.Text = resultField.Text.Substring(0, resultField.Text.Length-1);
+                    }
+                };
+
+            buttonComma.Click += (object sender, EventArgs e) =>
+            {
+                //if (_lastKeyInput == Keys.Digit || _lastKeyInput == Keys.Sign || _lastKeyInput == Keys.Equal)
+                //{
+                    if (!(string.IsNullOrEmpty(resultField.Text)))
+                    {
+                        resultField.Text += '.';
+                        //_lastKeyInput = Keys.DecimalPoint;
+                    }
+                    else
+                        resultField.Text += "0.";
+               // }
+                _lastKeyInput = Keys.DecimalPoint;
+            };
+
             buttonC.Click += (object sender, EventArgs e) =>
             {
                 op = null;
@@ -362,8 +418,6 @@ namespace Calc
             Button functions = FindViewById<Button>(Resource.Id.functions);
             Button standart = FindViewById<Button>(Resource.Id.standart);
 
-           // viewSwitcher.SetInAnimation(this, Android.Resource.Animation.FadeIn);
-            //viewSwitcher.SetOutAnimation(this, Android.Resource.Animation.FadeIn);
             functions.Click += (object sender, EventArgs e) =>
             {
                 if (viewSwitcher.CurrentView != calcView2)

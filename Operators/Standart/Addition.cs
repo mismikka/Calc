@@ -2,6 +2,9 @@
 
 namespace Calc
 {
+    /// <summary>
+    /// Сложение
+    /// </summary>
     internal sealed class Addition : IOperation
     {
         public double Calculate(params double[] parameters)

@@ -2,6 +2,9 @@
 
 namespace Calc
 {
+    /// <summary>
+    /// Вычитание
+    /// </summary>
     public class Subtraction : IOperation
     {
         public double Calculate(params double[] parameters)
