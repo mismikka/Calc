@@ -22,8 +22,7 @@ namespace Calc
             Operator, 
             Equal, 
             DecimalPoint,
-            Sign,
-            Unary
+            Sign
         }
 
         private Keys? _lastKeyInput = null;
@@ -363,21 +362,22 @@ namespace Calc
                 }
             };
 
-            buttonSqrt.Click += (object sender, EventArgs e) => 
+            buttonSqrt.Click += (object sender, EventArgs e) =>
+            {
+                if (_lastKeyInput == Keys.Digit ||
+                    _lastKeyInput == Keys.Sign ||
+                    _lastKeyInput == Keys.Equal)
                 {
-                    if (_lastKeyInput == Keys.Digit || _lastKeyInput == Keys.Sign || _lastKeyInput == Keys.Equal)
-                    {
-                        resultField.Text = new Sqrt().Calculate(double.Parse(resultField.Text)).ToString();
-                        _lastKeyInput = Keys.Operator;
-                    }
-                };
+                    resultField.Text = new Sqrt().Calculate(double.Parse(resultField.Text)).ToString();
+                }
+            };
 
             buttonFraction.Click += (object sender, EventArgs e) =>
             {
-                    if (_lastKeyInput == Keys.Digit || _lastKeyInput == Keys.Sign || _lastKeyInput == Keys.Equal)
-                    {
-                        resultField.Text = new Fraction().Calculate(double.Parse(resultField.Text)).ToString();
-                    }
+                if (_lastKeyInput == Keys.Digit || _lastKeyInput == Keys.Sign || _lastKeyInput == Keys.Equal)
+                {
+                    resultField.Text = new Fraction().Calculate(double.Parse(resultField.Text)).ToString();
+                }
             };
 
             buttonBackspace.Click += (object sender, EventArgs e) =>
@@ -391,16 +391,16 @@ namespace Calc
 
             buttonComma.Click += (object sender, EventArgs e) =>
             {
-                //if (_lastKeyInput == Keys.Digit || _lastKeyInput == Keys.Sign || _lastKeyInput == Keys.Equal)
-                //{
+                if (_lastKeyInput == Keys.Digit || _lastKeyInput == Keys.Sign || _lastKeyInput == Keys.Equal)
+                {
                     if (!(string.IsNullOrEmpty(resultField.Text)))
                     {
                         resultField.Text += '.';
-                        //_lastKeyInput = Keys.DecimalPoint;
+                        _lastKeyInput = Keys.DecimalPoint;
                     }
                     else
                         resultField.Text += "0.";
-               // }
+                }
                 _lastKeyInput = Keys.DecimalPoint;
             };
 
